@@ -1,0 +1,10 @@
+{
+  "description": "Connect with neighbors in Sime Darby Township to discover local events, find friends with shared interests, and build a vibrant community.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

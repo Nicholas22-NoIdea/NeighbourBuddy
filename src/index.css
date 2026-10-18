@@ -1,0 +1,212 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap");
+@import "tailwindcss";
+
+:root {
+  font-family: "DM Sans", sans-serif;
+  color: #202a25;
+  background: #eef1ec;
+  font-synthesis: none;
+  --green: #246b50;
+  --green-dark: #174b38;
+  --sage: #e8f1e9;
+  --background: #f8f9f6;
+  --yellow: #f4c95d;
+  --muted: #6d7771;
+  --border: #e3e8e3;
+  --shadow: 0 8px 28px rgba(28, 65, 48, 0.08);
+  --mobile-width: 390px;
+}
+
+* { box-sizing: border-box; }
+html { overflow-x: hidden; background: #eef1ec; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, input:focus-visible { outline: 3px solid rgba(36, 107, 80, .22); outline-offset: 2px; }
+img { display: block; }
+
+.app-shell { width: min(100%, var(--mobile-width)); min-height: 100vh; margin: 0 auto; overflow-x: hidden; background: var(--background); box-shadow: 0 0 50px rgba(24, 50, 39, .07); }
+main { min-height: 100vh; padding: 0 18px 116px; overflow: hidden; }
+.top-header { height: 76px; display: flex; align-items: center; justify-content: space-between; }
+.brand-lockup, .header-actions, .quick-actions, .section-heading, .event-meta, .attendance-row, .card-footer, .host, .buddy-name-row, .interest-list, .together-banner, .upcoming-card, .text-button, .sheet-heading, .participant-summary { display: flex; align-items: center; }
+.brand-lockup { gap: 10px; min-width: 0; }
+.location-wrap { position: relative; }
+.brand-mark { width: 36px; height: 36px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 12px; color: white; background: var(--green); box-shadow: 0 5px 12px rgba(36, 107, 80, .2); }
+.brand-lockup strong { display: block; font: 800 15px/1.1 "Manrope", sans-serif; letter-spacing: -.35px; color: var(--green-dark); }
+.location-button { padding: 3px 0 0; border: 0; color: var(--muted); background: none; font-size: 10.5px; cursor: pointer; }
+.location-button span { color: var(--green); }
+.location-popover { position: absolute; z-index: 50; left: 0; top: 43px; width: 230px; display: flex; align-items: center; gap: 9px; padding: 12px; border: 1px solid var(--border); border-radius: 13px; color: var(--green); background: white; box-shadow: var(--shadow); }
+.location-popover > span { flex: 1; }
+.location-popover strong { color: #29362f; font-size: 11px; }
+.location-popover small { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; }
+.header-actions { gap: 8px; }
+.icon-button { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; color: #4c5751; background: white; cursor: pointer; }
+.notification-button { position: relative; }
+.unread-dot { position: absolute; width: 8px; height: 8px; right: 9px; top: 8px; border: 2px solid white; border-radius: 50%; background: #de654c; }
+.profile-avatar { width: 41px; height: 41px; object-fit: cover; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 0 1px #dce2dd; }
+
+.welcome { padding: 18px 0 16px; }
+.eyebrow, .mini-label { color: var(--green); font-weight: 800; font-size: 10px; letter-spacing: 1.2px; }
+.welcome h1, .page-intro h1 { margin: 5px 0 4px; font: 800 26px/1.2 "Manrope", sans-serif; letter-spacing: -.7px; }
+.welcome p, .page-intro p { margin: 0; color: var(--muted); font-size: 14px; }
+.search-box { height: 52px; display: flex; align-items: center; gap: 11px; padding: 0 15px; border: 1px solid #dfe5df; border-radius: 15px; color: #78817c; background: white; box-shadow: 0 4px 15px rgba(28, 65, 48, .04); }
+.search-box:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(36, 107, 80, .09); }
+.search-box input { width: 100%; border: 0; outline: 0; color: #26312c; background: transparent; font-size: 14px; }
+.search-box input::placeholder { color: #929a96; }
+.quick-actions { gap: 10px; margin-top: 12px; }
+.quick-actions button { min-height: 48px; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 14px; font-weight: 700; font-size: 13px; cursor: pointer; }
+.primary-action { color: white; background: var(--green); box-shadow: 0 7px 16px rgba(36, 107, 80, .18); }
+.secondary-action { color: var(--green-dark); background: var(--sage); }
+
+.section { margin-top: 30px; }
+.section-heading { justify-content: space-between; margin-bottom: 13px; }
+.section-heading h2, .together-banner h2, .notification-sheet h2 { margin: 0; font: 800 19px/1.25 "Manrope", sans-serif; letter-spacing: -.4px; }
+.text-button { gap: 0; min-height: 36px; padding: 0; border: 0; color: var(--green); background: none; font-weight: 700; font-size: 12px; cursor: pointer; }
+.section-subtitle { margin: -8px 0 14px; color: var(--muted); font-size: 13px; }
+.chip-scroller, .buddy-scroller { display: flex; gap: 8px; margin-right: -18px; padding: 2px 18px 5px 0; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; }
+.chip-scroller::-webkit-scrollbar, .buddy-scroller::-webkit-scrollbar { display: none; }
+.chip { min-height: 38px; padding: 0 17px; flex: 0 0 auto; border: 1px solid transparent; border-radius: 999px; color: #65706a; background: #edf0ec; font-size: 12px; font-weight: 700; cursor: pointer; }
+.chip.active { color: white; background: var(--green); box-shadow: 0 4px 10px rgba(36, 107, 80, .16); }
+.event-list { display: grid; gap: 16px; margin-top: 13px; }
+.event-card { overflow: hidden; border: 1px solid var(--border); border-radius: 18px; background: white; box-shadow: var(--shadow); }
+.event-image-wrap { position: relative; height: 168px; }
+.event-image { width: 100%; height: 100%; object-fit: cover; }
+.category-badge { position: absolute; left: 12px; top: 12px; padding: 6px 10px; border-radius: 99px; color: var(--green-dark); background: rgba(244, 252, 246, .94); backdrop-filter: blur(8px); font-size: 10px; font-weight: 800; }
+.bookmark-button { position: absolute; right: 11px; top: 11px; width: 39px; height: 39px; display: grid; place-items: center; border: 0; border-radius: 50%; color: #314039; background: rgba(255, 255, 255, .94); box-shadow: 0 4px 12px rgba(0, 0, 0, .12); cursor: pointer; }
+.bookmark-button.saved { color: var(--green); }
+.event-content { padding: 15px; }
+.event-content h3 { margin: 0 0 10px; font: 800 17px/1.25 "Manrope", sans-serif; letter-spacing: -.25px; }
+.event-meta { gap: 7px; margin: 5px 0; color: var(--muted); font-size: 12px; }
+.event-meta svg { color: var(--green); flex: 0 0 auto; }
+.date-meta { color: #414d47; font-weight: 600; }
+.attendance-row { min-height: 43px; margin: 11px 0 8px; padding: 8px 10px; border-radius: 12px; background: #f5f7f3; }
+.avatar-stack { display: flex; margin-right: 8px; }
+.avatar-stack img { width: 25px; height: 25px; margin-left: -6px; object-fit: cover; border: 2px solid white; border-radius: 50%; }
+.avatar-stack img:first-child { margin-left: 0; }
+.attendance-row strong { color: #425048; font-size: 11px; }
+.spots-pill { margin-left: auto; padding: 5px 8px; border-radius: 99px; color: #805f0b; background: #fff5d7; font-size: 10px; font-weight: 800; }
+.card-footer { justify-content: space-between; padding-top: 11px; border-top: 1px solid #edf0ed; }
+.host { gap: 7px; min-width: 0; color: var(--muted); font-size: 10px; }
+.host img { width: 27px; height: 27px; object-fit: cover; border-radius: 50%; }
+.host strong { color: #354139; }
+.small-primary { min-height: 40px; padding: 0 15px; border: 0; border-radius: 11px; color: white; background: var(--green); font-size: 11px; font-weight: 800; cursor: pointer; }
+
+.buddy-scroller { gap: 12px; }
+.buddy-card { width: 210px; flex: 0 0 auto; padding: 16px; scroll-snap-align: start; border: 1px solid var(--border); border-radius: 17px; background: white; box-shadow: 0 6px 22px rgba(28, 65, 48, .055); }
+.buddy-photo { width: 58px; height: 58px; margin-bottom: 10px; object-fit: cover; border: 3px solid var(--sage); border-radius: 50%; }
+.buddy-name-row { gap: 6px; }
+.buddy-card h3 { margin: 0; font: 800 16px "Manrope", sans-serif; }
+.online-dot { width: 7px; height: 7px; border-radius: 50%; background: #56a96f; }
+.interest-list { gap: 5px; margin: 8px 0; }
+.interest-list span { padding: 4px 7px; border-radius: 7px; color: var(--green); background: var(--sage); font-size: 9px; font-weight: 700; }
+.buddy-card p { min-height: 30px; display: flex; align-items: flex-start; gap: 5px; margin: 8px 0 12px; color: var(--muted); font-size: 10px; line-height: 1.35; }
+.buddy-card p svg { flex: 0 0 auto; color: #b88712; }
+.buddy-card button { width: 100%; min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 5px; border-radius: 11px; font-size: 11px; font-weight: 800; cursor: pointer; }
+.add-button { border: 1px solid var(--green); color: var(--green); background: white; }
+.request-sent { border: 1px solid #d5e5d8; color: var(--green); background: var(--sage); }
+
+.together-banner { position: relative; min-height: 190px; align-items: stretch; margin-top: 30px; overflow: hidden; border-radius: 18px; background: var(--sage); }
+.together-banner > div { position: relative; z-index: 1; width: 70%; padding: 21px 0 20px 19px; }
+.together-banner h2 { margin: 5px 0 7px; font-size: 18px; }
+.together-banner p { margin: 0 0 15px; color: #52625a; font-size: 11px; line-height: 1.5; }
+.together-banner button { min-height: 40px; display: flex; align-items: center; gap: 4px; padding: 0 12px; border: 0; border-radius: 11px; color: white; background: var(--green); font-size: 10.5px; font-weight: 800; cursor: pointer; }
+.together-banner img { position: absolute; right: 0; bottom: 0; width: 37%; height: 100%; object-fit: cover; mask-image: linear-gradient(to right, transparent 0%, black 28%); opacity: .95; }
+
+.upcoming-card { position: relative; width: 100%; padding: 10px; gap: 11px; text-align: left; border: 1px solid var(--border); border-radius: 16px; color: inherit; background: white; box-shadow: 0 5px 18px rgba(28, 65, 48, .05); cursor: pointer; }
+.upcoming-card > img { width: 82px; height: 96px; flex: 0 0 auto; object-fit: cover; border-radius: 11px; }
+.upcoming-info { min-width: 0; display: grid; gap: 4px; padding-right: 5px; }
+.upcoming-info small { color: var(--green); font-size: 8.5px; font-weight: 800; letter-spacing: .5px; }
+.upcoming-info strong { overflow: hidden; text-overflow: ellipsis; font: 800 13px/1.25 "Manrope", sans-serif; white-space: nowrap; }
+.upcoming-info span { display: flex; align-items: center; gap: 4px; color: var(--muted); font-size: 9.5px; }
+.upcoming-info svg { color: var(--green); }
+.reminder-badge { position: absolute; right: 8px; top: 7px; display: flex; align-items: center; gap: 3px; padding: 4px 6px; border-radius: 7px; color: #6d520e; background: #fff4d5; font-size: 8px; font-weight: 800; }
+.community-card { overflow: hidden; border: 1px solid var(--border); border-radius: 17px; background: white; }
+.community-card > img { width: 100%; height: 148px; object-fit: cover; }
+.community-card > div { padding: 15px; }
+.community-card h3 { margin: 5px 0; font: 800 15px "Manrope", sans-serif; }
+.community-card p { margin: 0 0 10px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.community-card button { display: flex; align-items: center; padding: 0; border: 0; color: var(--green); background: none; font-size: 11px; font-weight: 800; cursor: pointer; }
+.brand-message { padding: 35px 0 5px; text-align: center; color: #7c8680; font-size: 11px; line-height: 1.6; }
+.brand-message strong { color: var(--green); }
+
+.bottom-nav { position: fixed; z-index: 40; left: 50%; bottom: 0; width: min(100%, var(--mobile-width)); height: calc(75px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(5, 1fr); padding: 7px 6px env(safe-area-inset-bottom); transform: translateX(-50%); border-top: 1px solid #e3e8e3; background: rgba(255, 255, 255, .96); box-shadow: 0 -8px 25px rgba(31, 57, 45, .06); backdrop-filter: blur(14px); }
+.bottom-nav button { min-width: 0; min-height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 0; border-radius: 12px; color: #929a96; background: none; font-size: 9.5px; font-weight: 700; cursor: pointer; }
+.bottom-nav button.active { color: var(--green); }
+.bottom-nav button.active::before { content: ""; position: absolute; top: 0; width: 24px; height: 3px; border-radius: 0 0 4px 4px; background: var(--green); }
+.bottom-nav button { position: relative; }
+
+.empty-state { padding: 35px 20px; text-align: center; border: 1px dashed #d6ddd7; border-radius: 17px; background: white; }
+.empty-state > span { width: 48px; height: 48px; display: grid; place-items: center; margin: 0 auto; border-radius: 50%; color: var(--green); background: var(--sage); }
+.empty-state h3 { margin: 10px 0 4px; font: 800 15px "Manrope", sans-serif; }
+.empty-state p { margin: 0 0 12px; color: var(--muted); font-size: 12px; }
+.empty-state button { min-height: 40px; padding: 0 14px; border: 0; border-radius: 10px; color: white; background: var(--green); font-weight: 700; }
+
+.modal-backdrop { position: fixed; z-index: 100; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding-top: 36px; background: rgba(16, 29, 23, .5); backdrop-filter: blur(3px); animation: fade-in .2s ease; }
+.event-modal, .notification-sheet { position: relative; width: min(100%, var(--mobile-width)); max-height: 94vh; overflow-y: auto; border-radius: 24px 24px 0 0; background: var(--background); animation: slide-up .3s ease; }
+.modal-handle { position: absolute; z-index: 2; left: 50%; top: 8px; width: 38px; height: 4px; transform: translateX(-50%); border-radius: 5px; background: rgba(255, 255, 255, .75); }
+.modal-close { position: absolute; z-index: 2; right: 14px; top: 14px; width: 41px; height: 41px; display: grid; place-items: center; border: 0; border-radius: 50%; color: #344039; background: rgba(255, 255, 255, .94); cursor: pointer; }
+.modal-image { width: 100%; height: 230px; object-fit: cover; }
+.modal-content { padding: 22px 19px calc(22px + env(safe-area-inset-bottom)); }
+.modal-content h2 { margin: 5px 0 7px; font: 800 24px/1.2 "Manrope", sans-serif; letter-spacing: -.5px; }
+.modal-lede { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.detail-box { display: grid; gap: 12px; margin: 18px 0; padding: 15px; border: 1px solid var(--border); border-radius: 14px; background: white; }
+.detail-box p { display: flex; gap: 11px; margin: 0; color: var(--green); }
+.detail-box span { display: grid; gap: 2px; color: #2d3933; }
+.detail-box strong { font-size: 11px; }
+.detail-box small { color: var(--muted); font-size: 10px; }
+.participant-summary { gap: 11px; margin-bottom: 18px; }
+.avatar-stack.large img { width: 35px; height: 35px; }
+.participant-summary > div:last-child { display: grid; gap: 2px; }
+.participant-summary strong { font-size: 11px; }
+.participant-summary span { color: var(--muted); font-size: 10px; }
+.join-button { width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 0; border-radius: 14px; color: white; background: var(--green); font-weight: 800; cursor: pointer; }
+.join-button:disabled { cursor: default; opacity: .78; }
+.join-button.joined { background: #397d5f; }
+.confirmation { margin: 9px 0 0; text-align: center; color: var(--green); font-size: 10.5px; font-weight: 700; }
+.prototype-note { margin: 15px 0 0; text-align: center; color: #929b96; font-size: 9px; }
+
+.notification-sheet { padding: 22px 18px calc(26px + env(safe-area-inset-bottom)); }
+.sheet-heading { justify-content: space-between; margin-bottom: 16px; }
+.notification-item { display: flex; gap: 12px; padding: 14px 5px; border-bottom: 1px solid var(--border); }
+.notification-item > img, .notification-icon { width: 42px; height: 42px; flex: 0 0 auto; border-radius: 50%; }
+.notification-item > img { object-fit: cover; }
+.notification-icon { display: grid; place-items: center; color: var(--green); background: var(--sage); }
+.notification-item strong { display: block; font-size: 12px; }
+.notification-item p { margin: 3px 0; color: var(--muted); font-size: 10.5px; }
+.notification-item small { color: #9aa29e; font-size: 9px; }
+.notification-item.new { position: relative; }
+.notification-item.new::after { content: ""; position: absolute; right: 3px; top: 20px; width: 7px; height: 7px; border-radius: 50%; background: #de654c; }
+
+.listing-page { padding-top: 14px; }
+.page-intro { padding: 18px 0 22px; text-align: center; }
+.page-icon { width: 50px; height: 50px; display: grid; place-items: center; margin: 0 auto 11px; border-radius: 16px; color: var(--green); background: var(--sage); }
+.page-intro h1 { font-size: 25px; }
+.listing-page > .event-list { margin-top: 18px; }
+.buddy-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.buddy-grid .buddy-card { width: auto; padding: 13px; }
+.activity-page-card { margin-top: 5px; }
+.profile-card { padding: 25px 18px; text-align: center; border: 1px solid var(--border); border-radius: 18px; background: white; box-shadow: var(--shadow); }
+.profile-card > img { width: 84px; height: 84px; margin: 0 auto; object-fit: cover; border: 4px solid var(--sage); border-radius: 50%; }
+.profile-card h2 { margin: 11px 0 3px; font: 800 20px "Manrope", sans-serif; }
+.profile-card > p { margin: 0 auto 20px; max-width: 280px; color: var(--muted); font-size: 12px; }
+.profile-card > div { display: grid; grid-template-columns: repeat(3, 1fr); padding: 15px 0; border-block: 1px solid var(--border); }
+.profile-card div span { display: grid; gap: 3px; color: var(--muted); font-size: 9px; }
+.profile-card div strong { color: var(--green-dark); font: 800 18px "Manrope", sans-serif; }
+.profile-card button { min-height: 43px; margin-top: 18px; padding: 0 25px; border: 1px solid var(--green); border-radius: 12px; color: var(--green); background: white; font-weight: 800; cursor: pointer; }
+
+@keyframes slide-up { from { transform: translateY(25px); opacity: .6; } }
+@keyframes fade-in { from { opacity: 0; } }
+
+@media (max-width: 365px) {
+  main { padding-inline: 14px; }
+  .brand-lockup strong { font-size: 14px; }
+  .location-button { font-size: 9.5px; }
+  .quick-actions button { font-size: 11.5px; }
+  .event-image-wrap { height: 150px; }
+  .together-banner > div { width: 75%; padding-left: 15px; }
+  .buddy-card { width: 195px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; }
+}
