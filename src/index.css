@@ -25,7 +25,7 @@ button { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, input:focus-visible { outline: 3px solid rgba(36, 107, 80, .22); outline-offset: 2px; }
 img { display: block; }
 
-.app-shell { width: min(100%, var(--mobile-width)); min-height: 100vh; margin: 0 auto; overflow-x: hidden; background: var(--background); box-shadow: 0 0 50px rgba(24, 50, 39, .07); }
+.app-shell { width: var(--mobile-width); max-width: 100vw; min-height: 100vh; margin: 0 auto; overflow-x: hidden; background: var(--background); box-shadow: 0 0 50px rgba(24, 50, 39, .07); }
 main { min-height: 100vh; padding: 0 18px 116px; overflow: hidden; }
 .top-header { height: 76px; display: flex; align-items: center; justify-content: space-between; }
 .brand-lockup, .header-actions, .quick-actions, .section-heading, .event-meta, .attendance-row, .card-footer, .host, .buddy-name-row, .interest-list, .together-banner, .upcoming-card, .text-button, .sheet-heading, .participant-summary { display: flex; align-items: center; }
@@ -129,7 +129,7 @@ main { min-height: 100vh; padding: 0 18px 116px; overflow: hidden; }
 .brand-message { padding: 35px 0 5px; text-align: center; color: #7c8680; font-size: 11px; line-height: 1.6; }
 .brand-message strong { color: var(--green); }
 
-.bottom-nav { position: fixed; z-index: 40; left: 50%; bottom: 0; width: min(100%, var(--mobile-width)); height: calc(75px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(5, 1fr); padding: 7px 6px env(safe-area-inset-bottom); transform: translateX(-50%); border-top: 1px solid #e3e8e3; background: rgba(255, 255, 255, .96); box-shadow: 0 -8px 25px rgba(31, 57, 45, .06); backdrop-filter: blur(14px); }
+.bottom-nav { position: fixed; z-index: 40; left: 50%; bottom: 0; width: var(--mobile-width); max-width: 100vw; height: calc(75px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(5, 1fr); padding: 7px 6px env(safe-area-inset-bottom); transform: translateX(-50%); border-top: 1px solid #e3e8e3; background: rgba(255, 255, 255, .96); box-shadow: 0 -8px 25px rgba(31, 57, 45, .06); backdrop-filter: blur(14px); }
 .bottom-nav button { min-width: 0; min-height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 0; border-radius: 12px; color: #929a96; background: none; font-size: 9.5px; font-weight: 700; cursor: pointer; }
 .bottom-nav button.active { color: var(--green); }
 .bottom-nav button.active::before { content: ""; position: absolute; top: 0; width: 24px; height: 3px; border-radius: 0 0 4px 4px; background: var(--green); }
@@ -142,7 +142,7 @@ main { min-height: 100vh; padding: 0 18px 116px; overflow: hidden; }
 .empty-state button { min-height: 40px; padding: 0 14px; border: 0; border-radius: 10px; color: white; background: var(--green); font-weight: 700; }
 
 .modal-backdrop { position: fixed; z-index: 100; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding-top: 36px; background: rgba(16, 29, 23, .5); backdrop-filter: blur(3px); animation: fade-in .2s ease; }
-.event-modal, .notification-sheet { position: relative; width: min(100%, var(--mobile-width)); max-height: 94vh; overflow-y: auto; border-radius: 24px 24px 0 0; background: var(--background); animation: slide-up .3s ease; }
+.event-modal, .notification-sheet { position: relative; width: var(--mobile-width); max-width: 100vw; max-height: 94vh; overflow-y: auto; border-radius: 24px 24px 0 0; background: var(--background); animation: slide-up .3s ease; }
 .modal-handle { position: absolute; z-index: 2; left: 50%; top: 8px; width: 38px; height: 4px; transform: translateX(-50%); border-radius: 5px; background: rgba(255, 255, 255, .75); }
 .modal-close { position: absolute; z-index: 2; right: 14px; top: 14px; width: 41px; height: 41px; display: grid; place-items: center; border: 0; border-radius: 50%; color: #344039; background: rgba(255, 255, 255, .94); cursor: pointer; }
 .modal-image { width: 100%; height: 230px; object-fit: cover; }
