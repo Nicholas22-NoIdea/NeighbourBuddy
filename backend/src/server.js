@@ -77,6 +77,12 @@ app.post('/api/chat/send', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 NeighbourBuddy Backend running on http://localhost:${PORT}`);
-});
+
+// Export the Express app for Vercel Serverless Functions
+module.exports = app;
+
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 NeighbourBuddy Backend running on http://localhost:${PORT}`);
+  });
+}
