@@ -33,7 +33,7 @@ export async function rankMatchedResidents(activity, residents) {
 
     // Initialize Gemini model
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.8-flash",
       generationConfig: {
         responseMimeType: "application/json"
       }
@@ -87,7 +87,7 @@ export async function moderateChatMessage(messageText) {
   try {
     if (!process.env.GEMINI_API_KEY) return { isSafe: true, reason: "" };
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
     const prompt = `Analyze this community chat message for hate speech, harassment, or severe profanity: "${messageText}". Respond in JSON: {"isSafe": true/false, "reason": "short explanation if unsafe"}`;
 
     const result = await model.generateContent(prompt);
