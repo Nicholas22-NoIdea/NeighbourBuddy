@@ -34,3 +34,8 @@ app.post('/api/activities/:id/register', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Express Backend running on http://localhost:${PORT}`);
 });
+
+// Add a default root route
+app.get('/', (req, res) => {
+  res.status(200).send('🚀 NeighbourBuddy Express Backend is running live on Render!');
+});
