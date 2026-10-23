@@ -79,7 +79,6 @@ app.post('/api/chat/send', async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 // Export the Express app for Vercel Serverless Functions
-module.exports = app;
 
   if (!process.env.VERCEL) {
   app.listen(PORT, () => console.log(`Server on ${PORT}`));
