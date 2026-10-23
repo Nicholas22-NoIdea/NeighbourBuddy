@@ -77,4 +77,4 @@ app.post('/api/chat/send', async (req, res) => {
 });
 
 // Export the Express app for Vercel Serverless
-module.exports = app;
+export default app;
