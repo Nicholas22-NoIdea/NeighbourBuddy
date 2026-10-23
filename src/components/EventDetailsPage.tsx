@@ -581,7 +581,7 @@ export function EventDetailsPage({
                 borderRadius: "5px",
               }}
             >
-              Gemini 2.5
+              Gemini 3.8
             </span>
           </div>
 
@@ -633,7 +633,7 @@ export function EventDetailsPage({
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <strong style={{ fontSize: "12px", color: "#111215" }}>
-                      {match.name || match.residentName || `Resident Match #${i + 1}`}
+                      {match.full_name || match.residentName || `Resident Match #${i + 1}`}
                     </strong>
                     <span
                       style={{
