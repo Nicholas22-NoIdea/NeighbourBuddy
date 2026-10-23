@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { EventData, Buddy } from "../App";
 import { AvatarConfig, CustomAvatar } from "./Avatar";
+import { getAIMatches, registerForActivity } from "../services/api";
 
 interface EventDetailsPageProps {
   event: EventData;
@@ -27,11 +28,38 @@ export function EventDetailsPage({
   const [calendarAdded, setCalendarAdded] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // AI Matching States
+  const [aiMatches, setAiMatches] = useState<any[]>([]);
+  const [isMatching, setIsMatching] = useState(false);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
     }, 3200);
+  };
+
+  const handleTriggerAIMatch = async () => {
+    if (!event?.id) return;
+    setIsMatching(true);
+    showToast("Gemini AI is analyzing community profiles...");
+    try {
+      const result = await getAIMatches(String(event.id));
+      if (result && result.matchedBuddies) {
+        setAiMatches(result.matchedBuddies);
+        showToast("✨ AI Matches found!");
+      } else if (result && Array.isArray(result)) {
+        setAiMatches(result);
+        showToast("✨ AI Matches found!");
+      } else {
+        showToast("No AI matches found for this activity.");
+      }
+    } catch (err) {
+      console.error("AI Match Error:", err);
+      showToast("Could not fetch AI matches.");
+    } finally {
+      setIsMatching(false);
+    }
   };
 
   const isAlexJoined =
@@ -89,15 +117,6 @@ export function EventDetailsPage({
     showToast(`Invitation sent to ${buddy.name}!`);
   };
 
-  const handleChatClick = () => {
-    if (!isAlexJoined) {
-      showToast("Please register for this event first to access the group chat!");
-      return;
-    }
-    onOpenChat();
-  };
-
-  // Map of known neighbours & buddies
   const neighbourNameMap: Record<string, string> = {
     alex: "Alex (You)",
     sarah: "Sarah",
@@ -111,7 +130,6 @@ export function EventDetailsPage({
   const buddyMap = new Map<string, Buddy>();
   buddies.forEach((b) => buddyMap.set(b.avatarKey.toLowerCase(), b));
 
-  // Build full attendee roster
   const rawAttendeeKeys = Array.from(
     new Set([
       event.hostAvatarKey || (isHost ? "alex" : ""),
@@ -135,12 +153,10 @@ export function EventDetailsPage({
     };
   });
 
-  // Someone you know (for preview when unregistered): priority to friends, then host/known neighbours
   const someoneYouKnow = fullAttendees.filter(
     (a) => !a.isYou && (a.isFriend || a.isHost || buddyMap.has(a.key))
   ).slice(0, 3);
 
-  // If someoneYouKnow is empty, fallback to first attendees
   const previewAttendees = someoneYouKnow.length > 0 ? someoneYouKnow : fullAttendees.slice(0, 2);
   const othersCount = Math.max(0, event.joined - previewAttendees.length);
 
@@ -280,7 +296,6 @@ export function EventDetailsPage({
             gap: "12px",
           }}
         >
-          {/* Name of Event (Title First) */}
           <h1
             style={{
               margin: 0,
@@ -294,7 +309,6 @@ export function EventDetailsPage({
             {event.title}
           </h1>
 
-          {/* Labels & Meta Row (Below Title, Smaller Font) */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "-2px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
               <span
@@ -358,7 +372,6 @@ export function EventDetailsPage({
             </span>
           </div>
 
-          {/* Organiser Row */}
           <div
             style={{
               display: "flex",
@@ -386,7 +399,6 @@ export function EventDetailsPage({
             </div>
           </div>
 
-          {/* Key Logistics Grid */}
           <div
             style={{
               display: "grid",
@@ -428,9 +440,7 @@ export function EventDetailsPage({
           </div>
         </div>
 
-        {/* ========================================================
-            REGISTRATION SECTION: Same Box with Yellow / Green State
-            ======================================================== */}
+        {/* REGISTRATION SECTION */}
         <div
           style={{
             background: "#ffffff",
@@ -485,7 +495,11 @@ export function EventDetailsPage({
 
           {!isAlexJoined ? (
             <button
-              onClick={() => {
+              onClick={async () => {
+                // 🚀 1. Send live POST request to Express backend
+                await registerForActivity(String(event.id));
+
+                // 2. Update React local state and open pop-up modal
                 onRegisterEvent(event);
                 setShowRegisteredModal(true);
               }}
@@ -537,9 +551,113 @@ export function EventDetailsPage({
           )}
         </div>
 
-        {/* ========================================================
-            WHO'S GOING SECTION: Gated by Registration Status
-            ======================================================== */}
+        {/* GEMINI AI "FILL-A-SPOT" RESIDENT MATCHING SECTION */}
+        <div
+          style={{
+            background: "linear-gradient(135deg, #ffffff 0%, #fef8e3 100%)",
+            borderRadius: "18px",
+            border: "1.5px solid #f5c842",
+            padding: "16px",
+            boxShadow: "0 4px 12px rgba(245, 200, 66, 0.2)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span style={{ fontSize: "16px" }}>✨</span>
+              <strong style={{ fontSize: "13.5px", fontWeight: 900, color: "#111215" }}>
+                Gemini AI Resident Matching
+              </strong>
+            </div>
+            <span
+              style={{
+                fontSize: "9.5px",
+                fontWeight: 800,
+                background: "#111215",
+                color: "#f5c842",
+                padding: "2px 6px",
+                borderRadius: "5px",
+              }}
+            >
+              Gemini 2.5
+            </span>
+          </div>
+
+          <p style={{ margin: 0, fontSize: "11px", color: "#555", lineHeight: 1.4 }}>
+            Let AI find the best matching local residents to fill open spot(s) based on skill levels, schedule, and interests.
+          </p>
+
+          <button
+            onClick={handleTriggerAIMatch}
+            disabled={isMatching}
+            style={{
+              padding: "10px 14px",
+              borderRadius: "12px",
+              border: "1.5px solid #111215",
+              background: isMatching ? "#e7e4dc" : "#111215",
+              color: isMatching ? "#666" : "#ffffff",
+              fontSize: "12px",
+              fontWeight: 800,
+              cursor: isMatching ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px",
+              transition: "all 0.15s ease",
+            }}
+            type="button"
+          >
+            {isMatching ? "✨ AI Analyzing Profiles..." : "✨ Find Matching Buddies with AI"}
+          </button>
+
+          {/* AI Match Results Display */}
+          {aiMatches.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "6px" }}>
+              <span style={{ fontSize: "11px", fontWeight: 800, color: "#8c6500" }}>
+                Top Recommended Matches:
+              </span>
+              {aiMatches.map((match: any, i: number) => (
+                <div
+                  key={i}
+                  style={{
+                    background: "#ffffff",
+                    borderRadius: "12px",
+                    border: "1px solid #f5c842",
+                    padding: "10px 12px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "4px",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <strong style={{ fontSize: "12px", color: "#111215" }}>
+                      {match.name || match.residentName || `Resident Match #${i + 1}`}
+                    </strong>
+                    <span
+                      style={{
+                        fontSize: "10px",
+                        fontWeight: 900,
+                        background: "#eaf8f0",
+                        color: "#197142",
+                        padding: "2px 6px",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      {match.matchScore || match.match_percentage || "92%"} Match
+                    </span>
+                  </div>
+                  <p style={{ margin: 0, fontSize: "10.5px", color: "#666", lineHeight: 1.35 }}>
+                    {match.reason || match.match_reason || "Great skill alignment and mutual activity preferences."}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* WHO'S GOING SECTION */}
         <div
           style={{
             background: "#ffffff",
@@ -578,7 +696,6 @@ export function EventDetailsPage({
           </div>
 
           {isAlexJoined ? (
-            /* Full Attendee Roster (Registered State) */
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
               {fullAttendees.map((attendee) => (
                 <div
@@ -623,7 +740,6 @@ export function EventDetailsPage({
               ))}
             </div>
           ) : (
-            /* Preview for Unregistered Users: Someone You Know */
             <div
               style={{
                 background: "#fbfaf7",
@@ -654,7 +770,6 @@ export function EventDetailsPage({
                 </span>
               </div>
 
-              {/* Someone you know avatar pills */}
               <div style={{ display: "flex", alignItems: "center", gap: "7px", flexWrap: "wrap" }}>
                 {previewAttendees.map((p) => (
                   <div
@@ -741,7 +856,6 @@ export function EventDetailsPage({
 
         {/* Action Buttons: Add to Calendar & Invite Friend */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-          {/* Add to Calendar Button */}
           <button
             onClick={handleAddToCalendar}
             style={{
@@ -765,7 +879,6 @@ export function EventDetailsPage({
             <span>{calendarAdded ? "✓ Added" : "+ Calendar"}</span>
           </button>
 
-          {/* Invite Friend Button */}
           <button
             onClick={() => setIsInviteModalOpen(true)}
             style={{
@@ -791,9 +904,7 @@ export function EventDetailsPage({
         </div>
       </div>
 
-      {/* ========================================================
-          INVITE FRIEND MODAL
-          ======================================================== */}
+      {/* INVITE FRIEND MODAL */}
       {isInviteModalOpen && (
         <div
           aria-modal="true"
@@ -857,7 +968,7 @@ export function EventDetailsPage({
                       onClick={() => handleInviteBuddy(buddy)}
                       style={{
                         padding: "6px 12px",
-                        borderRadius: "9px",
+                        borderRadius: "99px",
                         border: 0,
                         background: isInvited ? "#eaf8f0" : "#111215",
                         color: isInvited ? "#197142" : "#ffffff",
@@ -897,10 +1008,7 @@ export function EventDetailsPage({
         </div>
       )}
 
-      {/* ========================================================
-          POST-REGISTRATION POP-OUT MODAL
-          Notification +20 pts & Group Chat Access
-          ======================================================== */}
+      {/* POST-REGISTRATION POP-OUT MODAL */}
       {showRegisteredModal && (
         <div
           aria-modal="true"
@@ -922,7 +1030,6 @@ export function EventDetailsPage({
               ✕
             </button>
 
-            {/* +20 pts Notification Pill */}
             <div
               style={{
                 display: "inline-flex",
@@ -950,7 +1057,6 @@ export function EventDetailsPage({
               You have secured your spot for <strong>{event.title}</strong>.
             </p>
 
-            {/* Unlocked Group Chat Pop-out Feature Box */}
             <div
               style={{
                 background: "#ffffff",
@@ -988,7 +1094,6 @@ export function EventDetailsPage({
               </p>
             </div>
 
-            {/* Action Buttons */}
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <button
                 onClick={() => {

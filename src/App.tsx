@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getActivities } from "./services/api"; // Added API service helper
 import { AvatarConfig, CustomAvatar, defaultAvatars } from "./components/Avatar";
 import { AvatarStudioModal } from "./components/AvatarStudio";
 import { StreakPage } from "./components/StreakPage";
@@ -636,6 +637,34 @@ export default function App() {
   const [directChats, setDirectChats] = useState<DirectChatData[]>(initialDirectChats);
   const [activeDirectChat, setActiveDirectChat] = useState<DirectChatData | null>(null);
   const [buddies, setBuddies] = useState<Buddy[]>(initialBuddies);
+  useEffect(() => {
+    getActivities()
+      .then((backendActivities) => {
+        if (backendActivities && backendActivities.length > 0) {
+          const formattedEvents: EventData[] = backendActivities.map((act: any) => ({
+            id: act.id,
+            title: act.title,
+            category: act.category || "Sports",
+            date: "Today",
+            time: "7:00 PM",
+            venue: act.venue,
+            joined: 1,
+            spots: act.spots_left || 3,
+            host: "Community Host",
+            hostAvatarKey: "daniel",
+            sticker: act.category === "Sports" ? "🏸" : "🎲",
+            color: "yellow",
+            skillTag: `Required Level: ${act.required_skill_level || 1}`,
+            chatSnippet: { sender: "Host", avatarKey: "daniel", text: "Welcome to the event!" },
+            chatHistory: [],
+            attendeeKeys: [],
+          }));
+
+          setEvents(formattedEvents);
+        }
+      })
+      .catch((err) => console.error("Failed to load activities from backend:", err));
+  }, []);
   const [viewingEvent, setViewingEvent] = useState<EventData | null>(null);
   const [chatEvent, setChatEvent] = useState<EventData | null>(null);
   const [chatSource, setChatSource] = useState<"chats" | "event_details">("chats");

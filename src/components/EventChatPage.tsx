@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useId } from "react";
 import { EventData, ChatMessage, PollData } from "../App";
 import { AvatarConfig, CustomAvatar } from "./Avatar";
+import { sendChatMessage } from "../services/api";
 
 interface EventChatPageProps {
   event: EventData;
@@ -26,6 +27,7 @@ export function EventChatPage({
   const [inputText, setInputText] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [isCreatePollOpen, setIsCreatePollOpen] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   // Poll Creator Form State
   const [pollQuestion, setPollQuestion] = useState("");
@@ -39,11 +41,38 @@ export function EventChatPage({
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [event.chatHistory.length]);
 
-  const handleSend = (e: React.FormEvent) => {
+  // 🤖 Send Message with Gemini AI Content Moderation
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
-    onSendMessage(inputText.trim());
-    setInputText("");
+    const cleanText = inputText.trim();
+    if (!cleanText || isSending) return;
+
+    setIsSending(true);
+
+    try {
+      // Send through Express AI moderation server
+      const response = await sendChatMessage(String(event.id), "alex", cleanText);
+
+      // Check if Gemini AI Safety filter flagged the message
+      if (response && (response.error || response.isFlagged)) {
+        showNotice(
+          `⚠️ AI Safety Filter: ${response.reason || response.error || "Message flagged as inappropriate."}`
+        );
+        setIsSending(false);
+        return;
+      }
+
+      // Safe message! Pass to parent component handler
+      onSendMessage(cleanText);
+      setInputText("");
+    } catch (err) {
+      console.error("Failed to send moderated chat message:", err);
+      // Fallback: still send locally if network error occurs
+      onSendMessage(cleanText);
+      setInputText("");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleOpenPollModal = () => {
@@ -75,7 +104,7 @@ export function EventChatPage({
 
   const showNotice = (msg: string) => {
     setInAppNotice(msg);
-    setTimeout(() => setInAppNotice(null), 3000);
+    setTimeout(() => setInAppNotice(null), 4000);
   };
 
   const handleSubmitPoll = (e: React.FormEvent) => {
@@ -340,12 +369,11 @@ export function EventChatPage({
             margin: "4px 0",
           }}
         >
-          Event group chat active · Everyone can chat and create polls
+          Event group chat active · Protected by Gemini AI Moderation 🛡️
         </div>
 
         {/* Message Stream */}
         {event.chatHistory.map((msg) => {
-          // If this message contains a poll, render inline poll card (NO PINNING)
           if (msg.poll) {
             const poll = msg.poll;
             const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
@@ -407,7 +435,7 @@ export function EventChatPage({
                   {poll.question}
                 </h4>
 
-                {/* Poll Options with interactive voting and progress bar */}
+                {/* Poll Options */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
                   {poll.options.map((opt) => {
                     const isVoted = poll.userVotedId === opt.id;
@@ -437,7 +465,6 @@ export function EventChatPage({
                         }}
                         type="button"
                       >
-                        {/* Vote percentage background fill */}
                         <div
                           style={{
                             position: "absolute",
@@ -462,7 +489,6 @@ export function EventChatPage({
                           }}
                         >
                           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            {/* Radio indicator */}
                             <div
                               style={{
                                 width: "14px",
@@ -510,7 +536,6 @@ export function EventChatPage({
             );
           }
 
-          // Otherwise, render regular chat message bubble
           const isUser = Boolean(msg.isUser);
 
           return (
@@ -624,7 +649,6 @@ export function EventChatPage({
           }}
         >
           <form onSubmit={handleSend} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            {/* Create Poll Button (ppl can create poll) */}
             <button
               onClick={handleOpenPollModal}
               style={{
@@ -647,7 +671,6 @@ export function EventChatPage({
               + Poll
             </button>
 
-            {/* Text Input */}
             <input
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Say something to the group..."
@@ -665,32 +688,29 @@ export function EventChatPage({
               value={inputText}
             />
 
-            {/* Send Button */}
             <button
-              disabled={!inputText.trim()}
+              disabled={!inputText.trim() || isSending}
               style={{
                 padding: "9px 15px",
                 borderRadius: "12px",
-                background: inputText.trim() ? "#111215" : "#e0ded7",
-                color: inputText.trim() ? "#ffffff" : "#888",
+                background: inputText.trim() && !isSending ? "#111215" : "#e0ded7",
+                color: inputText.trim() && !isSending ? "#ffffff" : "#888",
                 border: 0,
                 fontSize: "11.5px",
                 fontWeight: 800,
-                cursor: inputText.trim() ? "pointer" : "default",
+                cursor: inputText.trim() && !isSending ? "pointer" : "default",
                 flexShrink: 0,
                 transition: "all 0.15s ease",
               }}
               type="submit"
             >
-              Send
+              {isSending ? "Checking..." : "Send"}
             </button>
           </form>
         </div>
       )}
 
-      {/* ========================================================
-          CREATE POLL MODAL SHEET (People can create poll)
-          ======================================================== */}
+      {/* CREATE POLL MODAL SHEET */}
       {isCreatePollOpen && (
         <div
           aria-modal="true"
@@ -735,7 +755,6 @@ export function EventChatPage({
             </p>
 
             <form onSubmit={handleSubmitPoll} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {/* Question Input */}
               <div>
                 <label
                   htmlFor={questionInputId}
@@ -760,7 +779,6 @@ export function EventChatPage({
                 />
               </div>
 
-              {/* Options List */}
               <div>
                 <label style={{ display: "block", fontSize: "11px", fontWeight: 800, color: "#111215", marginBottom: "6px" }}>
                   Options (Minimum 2)
@@ -791,7 +809,7 @@ export function EventChatPage({
                         style={{
                           flex: 1,
                           padding: "8px 11px",
-                          borderRadius: "9px",
+                          borderRadius: "99px",
                           border: "1.5px solid #dcd8ce",
                           fontSize: "11.5px",
                         }}
@@ -847,7 +865,6 @@ export function EventChatPage({
                 )}
               </div>
 
-              {/* Action Buttons */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "6px" }}>
                 <button
                   className="btn-punchy"
