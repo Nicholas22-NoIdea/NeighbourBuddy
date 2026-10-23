@@ -81,8 +81,7 @@ const PORT = process.env.PORT || 5000;
 // Export the Express app for Vercel Serverless Functions
 module.exports = app;
 
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`🚀 NeighbourBuddy Backend running on http://localhost:${PORT}`);
-  });
-}
+if (!process.env.VERCEL) {
+     app.listen(PORT, () => console.log(`Server on ${PORT}`));
+   }
+   export default app;   
