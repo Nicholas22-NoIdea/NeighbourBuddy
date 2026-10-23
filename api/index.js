@@ -9,7 +9,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Initialize Supabase
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -30,8 +29,9 @@ app.get('/api/activities', async (req, res) => {
   res.json({ activities: data });
 });
 
-// AI ROUTE: Match Buddies
+// EXPLICIT AI MATCH ROUTE
 app.post('/api/ai/match-buddies', async (req, res) => {
+  console.log('✨ /api/ai/match-buddies endpoint hit with body:', req.body);
   const { activityId } = req.body;
 
   try {
@@ -53,7 +53,7 @@ app.post('/api/ai/match-buddies', async (req, res) => {
     const matches = (residents || []).map((r, i) => ({
       id: r.id || String(i + 1),
       name: r.full_name || `Resident ${i + 1}`,
-      matchScore: `${95 - i * 4}%`,
+      matchScore: `${95 - (i * 4)}%`,
       reason: 'Matched based on shared schedule, sports skill level, and activity preferences.'
     }));
 
@@ -62,18 +62,6 @@ app.post('/api/ai/match-buddies', async (req, res) => {
     console.error('Match error:', err);
     return res.status(500).json({ error: err.message });
   }
-});
-
-// Chat message send route
-app.post('/api/chat/send', async (req, res) => {
-  const { activityId, senderId, messageText } = req.body;
-  const { data, error } = await supabase
-    .from('group_messages')
-    .insert([{ activity_id: activityId, sender_id: senderId, message_text: messageText }])
-    .select();
-
-  if (error) return res.status(400).json({ error: error.message });
-  res.status(201).json({ success: true, message: data ? data[0] : {} });
 });
 
 export default app;
