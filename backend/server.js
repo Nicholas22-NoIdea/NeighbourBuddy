@@ -53,3 +53,13 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   res.status(200).send('🚀 NeighbourBuddy Express Backend is running live on Render!');
 });
+
+// Export the Express app for Vercel Serverless Functions
+module.exports = app;
+
+// Only listen locally if not running in production (Vercel handles the listener in production)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Express Backend running on http://localhost:${PORT}`);
+  });
+}
