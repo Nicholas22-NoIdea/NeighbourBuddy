@@ -1,2 +1,3 @@
-const app = require('../backend/server.js'); // Or '../backend/src/server.js' if that's where your active file is
+const app = require('../backend/server.js'); // Adjust relative path if your server.js is located elsewhere
+
 module.exports = app;
