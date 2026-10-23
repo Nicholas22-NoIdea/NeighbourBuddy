@@ -1,9 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
-
-// 1. Fetch activities from Express / Supabase
+// 1. Fetch activities
 export async function getActivities() {
   try {
-    const res = await fetch(`${API_BASE_URL}/activities`);
+    const res = await fetch('/api/activities');
     if (!res.ok) throw new Error('Failed to fetch activities');
     const data = await res.json();
     return data.activities;
@@ -13,16 +11,16 @@ export async function getActivities() {
   }
 }
 
-// 2. Trigger AI "Fill-a-Spot" Matching
+// 2. Trigger AI matching
 export async function getAIMatches(activityId: string) {
   try {
-    // Hardcoded direct test to your Render backend
-    const res = await fetch('https://neighbourbuddy.onrender.com/api/ai/match-buddies', {
+    const res = await fetch('/api/ai/match-buddies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activityId }),
     });
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+    if (!res.ok) throw new Error('Failed to get AI matches');
     return await res.json();
   } catch (error) {
     console.error('getAIMatches error:', error);
@@ -33,7 +31,7 @@ export async function getAIMatches(activityId: string) {
 // 3. Send a moderated group chat message
 export async function sendChatMessage(activityId: string, senderId: string, messageText: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/chat/send`, {
+    const res = await fetch('/api/chat/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activityId, senderId, messageText }),
@@ -45,10 +43,10 @@ export async function sendChatMessage(activityId: string, senderId: string, mess
   }
 }
 
-// Add this to src/services/api.ts
+// 4. Register for activity
 export async function registerForActivity(activityId: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/activities/${activityId}/register`, {
+    const res = await fetch(`/api/activities/${activityId}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
     });
