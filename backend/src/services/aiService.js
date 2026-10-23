@@ -6,7 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 /**
  * Ranks candidate residents for an activity using Gemini 2.5 Flash
  */
-export async function rankMatchedResidents(activity: any, residents: any[]) {
+export async function rankMatchedResidents(activity, residents) {
   // Default fallback data for presentation/demo safety
   const defaultFallback = [
     {
@@ -83,7 +83,7 @@ export async function rankMatchedResidents(activity: any, residents: any[]) {
 /**
  * Moderates chat messages for safety
  */
-export async function moderateChatMessage(messageText: string) {
+export async function moderateChatMessage(messageText) {
   try {
     if (!process.env.GEMINI_API_KEY) return { isSafe: true, reason: "" };
 
