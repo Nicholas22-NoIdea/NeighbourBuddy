@@ -16,12 +16,13 @@ export async function getActivities() {
 // 2. Trigger AI "Fill-a-Spot" Matching
 export async function getAIMatches(activityId: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/ai/match-buddies`, {
+    // Hardcoded direct test to your Render backend
+    const res = await fetch('https://neighbourbuddy.onrender.com/api/ai/match-buddies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activityId }),
     });
-    if (!res.ok) throw new Error('Failed to get AI matches');
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return await res.json();
   } catch (error) {
     console.error('getAIMatches error:', error);
