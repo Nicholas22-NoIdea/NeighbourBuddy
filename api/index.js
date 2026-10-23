@@ -76,5 +76,22 @@ app.post('/api/chat/send', async (req, res) => {
   res.status(201).json({ success: true, message: data[0] });
 });
 
+// DEBUG CATCH-ALL: Let's see what routes Express actually has registered
+app._router.stack.forEach((layer) => {
+  if (layer.route) {
+    console.log(`Registered route: ${Object.keys(layer.route.methods)} ${layer.route.path}`);
+  }
+});
+
+// Fallback catch-all to see any unhandled requests
+app.all('*', (req, res) => {
+  console.log(`⚠️ Express caught unhandled request: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({ 
+    error: 'Route not found by Express', 
+    receivedPath: req.originalUrl,
+    method: req.method 
+  });
+});
+
 // Export the Express app for Vercel Serverless
 export default app;
