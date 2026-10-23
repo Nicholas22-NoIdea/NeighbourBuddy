@@ -1580,7 +1580,7 @@ export default function App() {
               <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0 }}>
                 <img
                   alt="Sime Darby Property"
-                  src="/sdp-logo.png"
+                  src="/Sime_Darby_Property_SDP_Logo_New_copy.png"
                   style={{
                     height: "32px",
                     width: "auto",
