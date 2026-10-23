@@ -30,6 +30,20 @@ app.post('/api/activities/:id/register', async (req, res) => {
   });
 });
 
+app.post('/api/ai/match-buddies', async (req, res) => {
+  const { activityId } = req.body;
+  console.log(`Received AI match request for activity ID: ${activityId}`);
+
+  // Return a successful response with mock or real matches
+  return res.status(200).json({
+    success: true,
+    matches: [
+      { id: '1', name: 'Alex Tan', matchScore: '95%', reason: 'Similar skill level and schedule' },
+      { id: '2', name: 'Priya', matchScore: '88%', reason: 'Active in community sports' }
+    ]
+  });
+});
+
 // Start Express Server
 app.listen(PORT, () => {
   console.log(`🚀 Express Backend running on http://localhost:${PORT}`);
