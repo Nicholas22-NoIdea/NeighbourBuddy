@@ -29,9 +29,8 @@ app.get('/api/activities', async (req, res) => {
   res.json({ activities: data });
 });
 
-// EXPLICIT AI MATCH ROUTE
+// AI MATCH ROUTE
 app.post('/api/ai/match-buddies', async (req, res) => {
-  console.log('✨ /api/ai/match-buddies endpoint hit with body:', req.body);
   const { activityId } = req.body;
 
   try {
